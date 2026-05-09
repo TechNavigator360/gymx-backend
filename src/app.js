@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 
-// Import the authentication routes separately to keep the application organized
 const authRoutes = require("./routes/authRoutes");
+const sessionRoutes = require("./routes/sessionRoutes");
 
 const app = express();
 
@@ -22,5 +22,8 @@ app.get("/health", (req, res) => {
 
 // All authentication-related endpoints will start with /api/auth
 app.use("/api/auth", authRoutes);
+
+// All session-related endpoints begin with /api/sessions
+app.use("/api/sessions", sessionRoutes);
 
 module.exports = app;
