@@ -1,4 +1,5 @@
 const authService = require("../services/authService");
+const authMiddleware = require("../middleware/authMiddleware");
 
 // Controller function for handling user registration requests
 const register = async (req, res) => {
@@ -39,7 +40,18 @@ const login = async (req, res) => {
     }    
 }
 
+// Returns the authenticated user's identity.
+// The user id is added to req.user by the auth middleware.
+const getMe = async (req, res) => {
+    return res.status(200).json({
+        user: {
+            id: req.user.id,
+        },
+    });
+};
+
 module.exports = {
     register,
     login,
+    getMe,
 };
