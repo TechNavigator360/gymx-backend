@@ -18,6 +18,28 @@ const register = async (req, res) => {
     }
 };
 
+// Handles login requests.
+// The controller forwards credentials to the service layer
+// and returns the authenticated response to the client. 
+const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const authResult = await authService.loginUser(
+            email,
+            password
+        );
+
+        return res.status(200).json(authResult);
+    } 
+    catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message || "Something went wrong",
+        });
+    }    
+}
+
 module.exports = {
     register,
+    login,
 };

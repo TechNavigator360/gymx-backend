@@ -8,6 +8,13 @@ const findUserByEmail = async (email) => {
     });
 };
 
+// Login requires the stored password hash so bcrypt can verify credentials.
+const findUserWithPasswordByEmail = async (email) => {
+    return prisma.user.findUnique({
+        where: { email },
+    });
+};
+
 const createUser = async (email, passwordHash) => {
     return prisma.user.create({
         data: {
@@ -23,5 +30,6 @@ const createUser = async (email, passwordHash) => {
 
 module.exports = {
     findUserByEmail,
+    findUserWithPasswordByEmail,
     createUser,
 };
