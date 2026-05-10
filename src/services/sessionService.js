@@ -5,10 +5,21 @@ const sessionRepository = require("../repositories/sessionRepository");
 
 const createSession = async (userId, sessionData) => {
 
-    // Combine authenticated user id with incoming session data.
+    // Date is required.
+    if (!sessionData.date) {
+        throw new Error("Training session date is required");
+    }
+
+    // Validate date format.
+    const parseDate = new Date(sessionData.date);
+
+    if (isNaN(parseDate.getTime())) {
+        throw new Error("Invalid training sessions date");
+    }
+
     const newSession = {
         userId,
-        ...sessionData,
+        date: parseDate,
     };
 
     return await sessionRepository.createSession(newSession);
