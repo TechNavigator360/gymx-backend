@@ -13,6 +13,24 @@ const createSession = async (sessionData) => {
     });    
 };
 
+const findSessionById = async (sessionId) => {
+    return await prisma.trainingSession.findUnique({
+        where: {
+            id: sessionId,
+        },
+    });
+};
+
+const deleteSessionById = async (sessionId) => {
+    return await prisma.trainingSession.delete({
+        where: {
+            id: sessionId,
+        },
+    });
+};
+
 module.exports = {
     createSession,
+    findSessionById,
+    deleteSessionById,
 };
