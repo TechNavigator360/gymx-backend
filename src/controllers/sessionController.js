@@ -25,6 +25,27 @@ const createSession = async (req, res) => {
     }
 };
 
+const getSessions = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const sessions = await sessionService.getSessions(userId);
+
+        res.status(200).json(sessions);
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Something went wrong while retrieving training sessions",
+        });
+    }
+};
+
+const getSessionById = async (req, res) => {
+    res.status(501).json({
+        message: "Get training session endpoint not implemented yet"
+    });
+};
+
 const deleteSession = async (req, res) => {
     try {
         // Get session id from route parameter
@@ -72,5 +93,7 @@ const deleteSession = async (req, res) => {
 
 module.exports = {
     createSession,
+    getSessions,
+    getSessionById,
     deleteSession,
 };

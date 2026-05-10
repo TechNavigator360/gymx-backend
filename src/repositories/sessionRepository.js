@@ -21,6 +21,17 @@ const findSessionById = async (sessionId) => {
     });
 };
 
+const findSessionsByUserId = async (userId) => {
+    return await prisma.trainingSession.findMany({
+        where: {
+            user_id: userId,
+        },
+        orderBy: {
+            date: "desc",
+        },
+    });
+};
+
 const deleteSessionById = async (sessionId) => {
     return await prisma.trainingSession.delete({
         where: {
@@ -32,5 +43,6 @@ const deleteSessionById = async (sessionId) => {
 module.exports = {
     createSession,
     findSessionById,
+    findSessionsByUserId,
     deleteSessionById,
 };

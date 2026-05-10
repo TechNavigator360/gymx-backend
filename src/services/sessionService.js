@@ -25,6 +25,10 @@ const createSession = async (userId, sessionData) => {
     return await sessionRepository.createSession(newSession);
 };
 
+const getSessions = async (userId) => {
+    return await sessionRepository.findSessionsByUserId(userId);
+};
+
 const deleteSession = async (sessionId, userId) => {
     // Check if the training session exists
     const session = await sessionRepository.findSessionById(sessionId);
@@ -44,5 +48,6 @@ const deleteSession = async (sessionId, userId) => {
 
 module.exports = {
     createSession,
+    getSessions,
     deleteSession,
 };
