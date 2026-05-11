@@ -28,12 +28,19 @@ const createSession = async (req, res) => {
 const getSessions = async (req, res) => {
     try {
         const userId = req.user.id;
+        const week = req.query.week;
 
-        const sessions = await sessionService.getSessions(userId);
+        const sessions = await sessionService.getSessions(userId, week);
 
         res.status(200).json(sessions);
     }
     catch (error) {
+        if (error.message === "INVALID_WEEK_FILTER") {
+            return res.status(400).json({
+                message: "Invalid week filter",
+            });
+        }
+        
         res.status(500).json({
             message: "Something went wrong while retrieving training sessions",
         });
@@ -41,9 +48,42 @@ const getSessions = async (req, res) => {
 };
 
 const getSessionById = async (req, res) => {
-    res.status(501).json({
-        message: "Get training session endpoint not implemented yet"
-    });
+    try {
+        const sessionId = parseInt(req.params.id);
+
+        // Validate session id
+        if (isNaN(sessionId)) {
+            return res.status(400).json({
+                message: "Invalid session id",
+            });
+        }
+
+        const userId = req.user.id;
+
+        const session = await sessionService.getSessionById(
+            sessionId,
+            userId
+        );
+    
+        res.status(200).json(session);
+    }
+    catch (error) {
+        if (error.message === "SESSION_NOT_FOUND") {
+            return res.status(404).json({
+                message: "Training session not found",
+            });
+        }
+        
+        if (error.message === "FORBIDDEN") {
+            return res.status(403).json({
+                message: "You are not allowed to access this training session",
+            });
+        }
+
+        res.status(500).json({
+            message: "Something went wrong while retrieving the training session"
+        });
+    }
 };
 
 const deleteSession = async (req, res) => {

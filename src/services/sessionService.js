@@ -25,9 +25,50 @@ const createSession = async (userId, sessionData) => {
     return await sessionRepository.createSession(newSession);
 };
 
-const getSessions = async (userId) => {
-    return await sessionRepository.findSessionsByUserId(userId);
+const getSessions = async (userId, week) => {
+    if (week && week !== "current") {
+        throw new Error("INVALID_WEEK_FILTER");
+    }
+
+    let startDate = null;
+    let endDate = null;
+
+    if (week === "current") {
+        const now = new Date();
+
+        const currentDay = now.getDay();
+        const daysSinceMonday = currentDay === 0 ? 6 : currentDay -1;
+
+        startDate = new Date(now);
+        startDate.setDate(now.getDate() - daysSinceMonday);
+        startDate.setHours(0, 0, 0, 0);
+
+        endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6);
+        endDate.setHours(23, 59, 59, 999);
+    }
+
+    return await sessionRepository.findSessionsByUserId(
+        userId,
+        startDate,
+        endDate
+    );
 };
+
+const getSessionById = async (sessionId, userId) => {
+    const session = await sessionRepository.findSessionById(sessionId);
+
+    if (!session) {
+        throw new Error("SESSION_NOT_FOUND");
+    }
+
+    // Users may only access their own training sessions
+    if (session.user_id !== userId) {
+        throw new Error("FORBIDDEN");
+    }
+
+    return session;
+}
 
 const deleteSession = async (sessionId, userId) => {
     // Check if the training session exists
@@ -49,5 +90,6 @@ const deleteSession = async (sessionId, userId) => {
 module.exports = {
     createSession,
     getSessions,
+    getSessionById,
     deleteSession,
 };

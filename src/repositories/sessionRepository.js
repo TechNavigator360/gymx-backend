@@ -21,11 +21,21 @@ const findSessionById = async (sessionId) => {
     });
 };
 
-const findSessionsByUserId = async (userId) => {
+const findSessionsByUserId = async (userId, startDate, endDate) => {
+
+    const whereClause = {
+        user_id: userId,
+    };
+
+    if (startDate && endDate) {
+        whereClause.date = {
+            gte: startDate,
+            lte: endDate,
+        };
+    }
+
     return await prisma.trainingSession.findMany({
-        where: {
-            user_id: userId,
-        },
+        where: whereClause,
         orderBy: {
             date: "desc",
         },
