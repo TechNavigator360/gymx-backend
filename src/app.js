@@ -3,6 +3,7 @@ const cors = require("cors");
 
 const authRoutes = require("./routes/authRoutes");
 const sessionRoutes = require("./routes/sessionRoutes");
+const weeklyGoalRoutes = require("./routes/weeklyGoalRoutes");
 
 const app = express();
 
@@ -25,5 +26,8 @@ app.use("/api/auth", authRoutes);
 
 // All session-related endpoints begin with /api/sessions
 app.use("/api/sessions", sessionRoutes);
+
+// All weekly goal-related endpoints begin with /api/weekly-goal
+app.use("/api/weekly-goal", weeklyGoalRoutes);
 
 module.exports = app;
