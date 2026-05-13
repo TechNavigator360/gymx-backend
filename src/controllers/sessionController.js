@@ -25,6 +25,7 @@ const createSession = async (req, res) => {
     }
 };
 
+// Returns authenticated user's sessions this week
 const getSessions = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -47,6 +48,7 @@ const getSessions = async (req, res) => {
     }
 };
 
+// Returns authenticated user's session by session id.
 const getSessionById = async (req, res) => {
     try {
         const sessionId = parseInt(req.params.id);

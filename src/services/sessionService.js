@@ -1,4 +1,6 @@
+const { en } = require("zod/locales");
 const sessionRepository = require("../repositories/sessionRepository");
+const { getCurrentWeekRange } = require("../utils/dateUtils");
 
 // Service layer for training session business logic.
 // This layer will later handle validation, ownership rules and session-related logic.
@@ -26,26 +28,20 @@ const createSession = async (userId, sessionData) => {
 };
 
 const getSessions = async (userId, week) => {
-    if (week && week !== "current") {
+    const weekFilter = week?.trim().toLowerCase();
+
+    if (weekFilter && weekFilter !== "current") {
         throw new Error("INVALID_WEEK_FILTER");
     }
-
+    
     let startDate = null;
     let endDate = null;
 
-    if (week === "current") {
-        const now = new Date();
+    if (weekFilter === "current") {
+        const currentWeekRange = getCurrentWeekRange();
 
-        const currentDay = now.getDay();
-        const daysSinceMonday = currentDay === 0 ? 6 : currentDay -1;
-
-        startDate = new Date(now);
-        startDate.setDate(now.getDate() - daysSinceMonday);
-        startDate.setHours(0, 0, 0, 0);
-
-        endDate = new Date(startDate);
-        endDate.setDate(startDate.getDate() + 6);
-        endDate.setHours(23, 59, 59, 999);
+        startDate = currentWeekRange.startDate;
+        endDate = currentWeekRange.endDate;
     }
 
     return await sessionRepository.findSessionsByUserId(
