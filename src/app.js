@@ -4,6 +4,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const sessionRoutes = require("./routes/sessionRoutes");
 const weeklyGoalRoutes = require("./routes/weeklyGoalRoutes");
+const progressRoutes = require("./routes/progressRoutes");
 
 const app = express();
 
@@ -29,5 +30,8 @@ app.use("/api/sessions", sessionRoutes);
 
 // All weekly goal-related endpoints begin with /api/weekly-goal
 app.use("/api/weekly-goal", weeklyGoalRoutes);
+
+// All progress-related endpoints begin with /api/progress
+app.use("/api/progress", progressRoutes);
 
 module.exports = app;
