@@ -1,4 +1,4 @@
-// Returns the start and end date of the currrent week.
+// Returns the start and end date of the current week.
 // Week starts on Monday and ends on Sunday.
 const getCurrentWeekRange = () => {
     const now = new Date();
@@ -20,6 +20,16 @@ const getCurrentWeekRange = () => {
     };
 };
 
+// Formats a Date object as YYYY-MM-DD using local time.
+const formatDateOnly = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+};
+
 module.exports = {
     getCurrentWeekRange,
-}
+    formatDateOnly,
+};

@@ -1,4 +1,4 @@
-const progressService = require("../services/progressService")
+const progressService = require("../services/progressService");
 
 // Returns the authenticated user's current weekly progress.
 const getCurrentWeekProgress = async (req, res) => {
@@ -24,4 +24,4 @@ const getCurrentWeekProgress = async (req, res) => {
 
 module.exports = {
     getCurrentWeekProgress,
-}
+};
