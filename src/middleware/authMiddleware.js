@@ -16,7 +16,7 @@ const authenticateToken = (req, res, next) => {
 
     if (!token) {
         return res.status(401).json({
-            message: "Authentications token is required",
+            message: "Authentication token is required",
         });
     }
 

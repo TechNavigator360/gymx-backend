@@ -34,4 +34,21 @@ app.use("/api/weekly-goal", weeklyGoalRoutes);
 // All progress-related endpoints begin with /api/progress
 app.use("/api/progress", progressRoutes);
 
+// Handles malformed JSON requests safely.
+// Prevents Express from leaking stack traces and internal paths.
+app.use((error, req, res, next) => {
+
+    if (
+        error instanceof SyntaxError &&
+        error.status === 400 && 
+        "body" in error
+    ) {
+        return res.status(400).json({
+            message: "Invalid JSON format",
+        });
+    }
+
+    next(error)
+})
+
 module.exports = app;

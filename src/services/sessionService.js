@@ -1,4 +1,3 @@
-const { en } = require("zod/locales");
 const sessionRepository = require("../repositories/sessionRepository");
 const { getCurrentWeekRange } = require("../utils/dateUtils");
 
