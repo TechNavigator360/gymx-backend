@@ -1,6 +1,9 @@
 const bcrypt = require("bcrypt");
-const userRepository = require("../repositories/userRepository");
 const jwt = require("jsonwebtoken");
+
+const userRepository = require("../repositories/userRepository");
+const { AppError } = require("../utils/appError.js")
+const { ERROR_CODES } = require("../utils/errorCodes.js");
 
 const SALT_ROUNDS = 10;
 
@@ -9,17 +12,13 @@ const SALT_ROUNDS = 10;
 // what is allowed and how registration should be processed.
 const registerUser = async (email, password) => {
     if (!email || !password) {
-        const error = new Error("Email and password are required");
-        error.statusCode = 400;
-        throw error;
+        throw new AppError(ERROR_CODES.VALIDATION.MISSING_CREDENTIALS);
     }
 
     const existingUser = await userRepository.findUserByEmail(email);
 
     if (existingUser) {
-        const error = new Error("Email is already in use");
-        error.statusCode = 400;
-        throw error;
+        throw new AppError(ERROR_CODES.RESOURCE.EMAIL_ALREADY_EXISTS);
     }
 
     // Passwords must never be stored as plain text.
@@ -38,19 +37,15 @@ const registerUser = async (email, password) => {
 // The service validates credentials and generates a JWT token.
 const loginUser = async (email, password) => {
     if (!email || !password) {
-        const error = new Error("Email and password are required");
-        error.statusCode = 400;
-        throw error; 
+        throw new AppError(ERROR_CODES.VALIDATION.MISSING_CREDENTIALS);
     }
 
     const user = await userRepository.findUserWithPasswordByEmail(email);
 
     // Do not reveal whether the email or password was incorrect.
-    // This prevenst leaking authentication details to attackers.
+    // This prevents leaking authentication details to attackers.
     if (!user) {
-        const error = new Error("Invalid email or password");
-        error.statusCode = 401;
-        throw error;
+        throw new AppError(ERROR_CODES.AUTHENTICATION.INVALID_CREDENTIALS);
     }
 
     const passwordMatch = await bcrypt.compare(
@@ -59,9 +54,7 @@ const loginUser = async (email, password) => {
     );
 
     if (!passwordMatch) {
-        const error = new Error("Invalid email or password");
-        error.statusCode = 401;
-        throw error;
+        throw new AppError(ERROR_CODES.AUTHENTICATION.INVALID_CREDENTIALS);
     }
 
     // JWT contains the authenticated user identity.

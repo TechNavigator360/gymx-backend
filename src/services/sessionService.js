@@ -1,5 +1,7 @@
 const sessionRepository = require("../repositories/sessionRepository");
 const { getCurrentWeekRange } = require("../utils/dateUtils");
+const { AppError } = require("../utils/appError");
+const { ERROR_CODES } = require("../utils/errorCodes");
 
 // Service layer for training session business logic.
 // This layer will later handle validation, ownership rules and session-related logic.
@@ -8,14 +10,14 @@ const createSession = async (userId, sessionData) => {
 
     // Date is required.
     if (!sessionData.date) {
-        throw new Error("Training session date is required");
+        throw new AppError(ERROR_CODES.VALIDATION.INVALID_DATE);
     }
 
     // Validate date format.
     const parseDate = new Date(sessionData.date);
 
     if (isNaN(parseDate.getTime())) {
-        throw new Error("Invalid training sessions date");
+        throw new AppError(ERROR_CODES.VALIDATION.INVALID_DATE);
     }
 
     const newSession = {
@@ -30,7 +32,7 @@ const getSessions = async (userId, week) => {
     const weekFilter = week?.trim().toLowerCase();
 
     if (weekFilter && weekFilter !== "current") {
-        throw new Error("INVALID_WEEK_FILTER");
+        throw new AppError(ERROR_CODES.VALIDATION.INVALID_WEEK_FILTER);
     }
     
     let startDate = null;
@@ -54,12 +56,12 @@ const getSessionById = async (sessionId, userId) => {
     const session = await sessionRepository.findSessionById(sessionId);
 
     if (!session) {
-        throw new Error("SESSION_NOT_FOUND");
+        throw new AppError(ERROR_CODES.RESOURCE.SESSION_NOT_FOUND);
     }
 
     // Users may only access their own training sessions
     if (session.user_id !== userId) {
-        throw new Error("FORBIDDEN");
+        throw new AppError(ERROR_CODES.AUTHORIZATION.FORBIDDEN);
     }
 
     return session;
@@ -70,12 +72,12 @@ const deleteSession = async (sessionId, userId) => {
     const session = await sessionRepository.findSessionById(sessionId);
 
     if (!session) {
-        throw new Error("SESSION_NOT_FOUND");
+        throw new AppError(ERROR_CODES.RESOURCE.SESSION_NOT_FOUND);
     }
 
     // Enforce ownership: users may only delete their own sessions
     if (session.user_id !== userId) {
-        throw new Error("FORBIDDEN");
+        throw new AppError(ERROR_CODES.AUTHORIZATION.FORBIDDEN);
     }
 
     // Delete only after existance and ownership are confirmed

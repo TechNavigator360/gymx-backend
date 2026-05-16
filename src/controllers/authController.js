@@ -1,5 +1,5 @@
 const authService = require("../services/authService");
-const authMiddleware = require("../middleware/authMiddleware");
+const { ERROR_CODES } = require("../utils/errorCodes.js");
 
 // Controller function for handling user registration requests
 const register = async (req, res) => {
@@ -13,9 +13,21 @@ const register = async (req, res) => {
             user,
         });
     } catch (error) {
-        return res.status(error.statusCode || 501).json({
-            message: error.message || "Something went wrong",
-        });
+        if (error.code === ERROR_CODES.VALIDATION.MISSING_CREDENTIALS) {
+            return res.status(400).json({
+                message: "Email and password are required",
+            })
+        }
+
+        if (error.code === ERROR_CODES.RESOURCE.EMAIL_ALREADY_EXISTS) {
+            return res.status(400).json({
+                message: "Email already in use",
+            });
+        }
+
+        return res.status(500).json({
+            message: "Something went wrong",
+        });   
     }
 };
 
@@ -34,11 +46,23 @@ const login = async (req, res) => {
         return res.status(200).json(authResult);
     } 
     catch (error) {
-        return res.status(error.statusCode || 500).json({
-            message: error.message || "Something went wrong",
+        if (error.code === ERROR_CODES.VALIDATION.MISSING_CREDENTIALS) {
+                return res.status(400).json({
+                message:"Email and password are required",
+            });
+        }
+
+        if (error.code === ERROR_CODES.AUTHENTICATION.INVALID_CREDENTIALS) {
+            return res.status(401).json({
+                message: "Invalid email or password",
+            });
+        }
+
+        return res.status(500).json({
+            message: "SOmething went wrong"
         });
     }    
-}
+};
 
 // Returns the authenticated user's identity.
 // The user id is added to req.user by the auth middleware.

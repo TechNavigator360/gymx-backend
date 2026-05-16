@@ -1,4 +1,5 @@
 const sessionService = require("../services/sessionService");
+const { ERROR_CODES } = require("../utils/errorCodes");
 
 const createSession = async (req, res) => {
 
@@ -19,8 +20,14 @@ const createSession = async (req, res) => {
     }
     catch (error) {
 
-        res.status(400).json({
-            message: error.message,
+        if (error.code === ERROR_CODES.VALIDATION.INVALID_DATE) {
+            res.status(400).json({
+                message: "Invalid training session date",
+            });
+        }
+
+        return res.status(500).json({
+            message: "Something went wrong while creating the training session"
         });
     }
 };
@@ -36,7 +43,7 @@ const getSessions = async (req, res) => {
         res.status(200).json(sessions);
     }
     catch (error) {
-        if (error.message === "INVALID_WEEK_FILTER") {
+        if (error.code === ERROR_CODES.VALIDATION.INVALID_WEEK_FILTER) {
             return res.status(400).json({
                 message: "Invalid week filter",
             });
@@ -70,13 +77,13 @@ const getSessionById = async (req, res) => {
         res.status(200).json(session);
     }
     catch (error) {
-        if (error.message === "SESSION_NOT_FOUND") {
+        if (error.code === ERROR_CODES.RESOURCE.SESSION_NOT_FOUND) {
             return res.status(404).json({
                 message: "Training session not found",
             });
         }
         
-        if (error.message === "FORBIDDEN") {
+        if (error.code === ERROR_CODES.AUTHORIZATION.FORBIDDEN) {
             return res.status(403).json({
                 message: "You are not allowed to access this training session",
             });
@@ -112,14 +119,14 @@ const deleteSession = async (req, res) => {
     catch (error) {
 
         // Session does not exist
-        if (error.message == "SESSION_NOT_FOUND") {
+        if (error.code == ERROR_CODES.RESOURCE.SESSION_NOT_FOUND) {
             return res.status(404).json({
                 message: "Training session not found",
             });
         }
 
         // Session belongs to another user
-        if (error.message === "FORBIDDEN") {
+        if (error.code === ERROR_CODES.AUTHORIZATION.FORBIDDEN) {
             return res.status(403).json({
                 message: "You are not allowed to delete this training session",
             });
