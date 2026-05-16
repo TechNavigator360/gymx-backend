@@ -1,5 +1,8 @@
 const weeklyGoalRepository = require("../repositories/weeklyGoalRepository");
 
+const { AppError } = require("../utils/appError");
+const { ERROR_CODES } = require("../utils/errorCodes");
+
 // Returns the weekly goal that belongs to the authenticated user.
 const getWeeklyGoalByUserId = async (userId) => {
     return weeklyGoalRepository.findWeeklyGoalByUserId(userId);
@@ -14,14 +17,18 @@ const createWeeklyGoal = async (userId, targetSessions) => {
         targetSessions < 1 ||
         targetSessions > 7
     ) {
-        throw new Error("Target sessions must be an integer between 1 and 7");
+        throw new AppError(
+            ERROR_CODES.VALIDATION.INVALID_TARGET_SESSIONS
+        );
     }
 
     // A user may only have one weekly goal.
     const existingGoal = await weeklyGoalRepository.findWeeklyGoalByUserId(userId); 
 
     if (existingGoal) {
-        throw new Error("Weekly goal already exists");
+        throw new AppError(
+            ERROR_CODES.RESOURCE.WEEKLY_GOAL_ALREADY_EXISTS
+        );
     }
 
     return weeklyGoalRepository.createWeeklyGoal(
@@ -39,14 +46,18 @@ const updateWeeklyGoal = async (userId, targetSessions) => {
         targetSessions < 1 ||
         targetSessions > 7
     ) {
-        throw new Error("Target sessions must be an integer between 1 and 7");
+        throw new AppError(
+            ERROR_CODES.VALIDATION.INVALID_TARGET_SESSIONS
+        );
     }
     
     // Weekly goal must exist before it can be updated.
     const existingGoal = await weeklyGoalRepository.findWeeklyGoalByUserId(userId);
 
     if (!existingGoal) {
-        throw new Error("Weekly goal not found");
+        throw new AppError(
+            ERROR_CODES.RESOURCE.WEEKLY_GOAL_NOT_FOUND
+        );
     }
 
     return weeklyGoalRepository.updateWeeklyGoal(
