@@ -14,7 +14,7 @@ const getWeeklyGoal = async (req, res) => {
         });
     }
 
-    res.status(200).json(weeklyGoal);
+    return res.status(200).json(weeklyGoal);
 };
 
 // Creates a new weekly goal for the authenticated user.
@@ -28,10 +28,8 @@ const createWeeklyGoal = async (req, res) => {
             target_sessions
         );
 
-        res.status(201).json(weeklyGoal);
+        return res.status(201).json(weeklyGoal);
     } catch (error) {
-        console.log(error);
-        console.log("error.code:", error.code);
         if (error.code === ERROR_CODES.VALIDATION.INVALID_TARGET_SESSIONS) {
             return res.status(400).json({
                 message: "Target sessions must be an integer between 1 and 7",
@@ -61,7 +59,7 @@ const updateWeeklyGoal = async (req, res) => {
             target_sessions
         );
 
-        res.status(200).json(weeklyGoal);
+        return res.status(200).json(weeklyGoal);
     } catch (error) {
 
         if (error.code === ERROR_CODES.VALIDATION.INVALID_TARGET_SESSIONS) {
@@ -76,7 +74,7 @@ const updateWeeklyGoal = async (req, res) => {
             });
         }
 
-        res.status(500).json({ 
+        return res.status(500).json({ 
             message: "Internal server error" 
         });
     }      

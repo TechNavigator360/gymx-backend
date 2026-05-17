@@ -2,12 +2,9 @@ const sessionService = require("../services/sessionService");
 const { ERROR_CODES } = require("../utils/errorCodes");
 
 const createSession = async (req, res) => {
-
     try {
-        
         // User identity comes from the JWT middleware.
         const userId = req.user.id;
-
         // Request body contains session input data.
         const sessionData = req.body;
 
@@ -16,12 +13,11 @@ const createSession = async (req, res) => {
         sessionData
         );
 
-        res.status(201).json(result);
+        return res.status(201).json(result);
     }
     catch (error) {
-
         if (error.code === ERROR_CODES.VALIDATION.INVALID_DATE) {
-            res.status(400).json({
+            return res.status(400).json({
                 message: "Invalid training session date",
             });
         }
@@ -40,7 +36,7 @@ const getSessions = async (req, res) => {
 
         const sessions = await sessionService.getSessions(userId, week);
 
-        res.status(200).json(sessions);
+        return res.status(200).json(sessions);
     }
     catch (error) {
         if (error.code === ERROR_CODES.VALIDATION.INVALID_WEEK_FILTER) {
@@ -49,7 +45,7 @@ const getSessions = async (req, res) => {
             });
         }
         
-        res.status(500).json({
+        return res.status(500).json({
             message: "Something went wrong while retrieving training sessions",
         });
     }
@@ -74,7 +70,7 @@ const getSessionById = async (req, res) => {
             userId
         );
     
-        res.status(200).json(session);
+        return res.status(200).json(session);
     }
     catch (error) {
         if (error.code === ERROR_CODES.RESOURCE.SESSION_NOT_FOUND) {
@@ -89,7 +85,7 @@ const getSessionById = async (req, res) => {
             });
         }
 
-        res.status(500).json({
+        return res.status(500).json({
             message: "Something went wrong while retrieving the training session"
         });
     }
@@ -114,7 +110,7 @@ const deleteSession = async (req, res) => {
         await sessionService.deleteSession(sessionId, userId);
 
         // Successful deletion returns 204 with no response body
-        res.status(204).send();
+        return res.status(204).send();
     }
     catch (error) {
 
@@ -133,7 +129,7 @@ const deleteSession = async (req, res) => {
         }
 
         // Generic server error
-        res.status(500).json({
+        return res.status(500).json({
             message: "Something went wrong while deleting the training session",
         });
     }
