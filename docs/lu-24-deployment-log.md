@@ -165,28 +165,38 @@ These checks are performed after deployment because they depend on the actual pr
 ## LU24 Deployment Execution Checklist
 
 ### Phase 0 — Start deployment branch
-- [ ] Confirm local baseline is complete
-- [ ] Check current branch: `git branch --show-current`
-- [ ] Check clean status: `git status`
-- [ ] Create deployment branch:
+- [x] Confirm local baseline is complete
+- [x] Check current branch: `git branch --show-current`
+- [x] Check clean status: `git status`
+- [x] Create deployment branch:
       `git checkout -b feature/lu24-deployment`
-- [ ] Commit deployment log so far:
+- [x] Commit deployment log so far:
       `git add docs/lu24-deployment-log.md`
       `git commit -m "docs(lu24): add deployment preparation log"`
 
 ### Phase 1 — Production readiness
 - [x] Verify `server.js` uses `process.env.PORT || 3000`
 - [x] Verify `.env` is ignored
-- [ ] Create `.env.example` without secrets
+- [x] Create `.env.example` without secrets
 - [x] Check `package.json` scripts:
       `start`, `dev`, possibly `test`
 - [x] Run local startup:
       `node src/server.js`
 - [x] Test in Postman:
       `/health`, login, protected endpoint
-- [ ] Commit:
+- [x] Commit:
       `git add .`
       `git commit -m "chore(deploy): prepare production runtime configuration"`
+
+### Phase 1a — Containerization
+
+- [ ] Create Dockerfile
+- [ ] Build backend container image
+- [ ] Run backend container locally
+- [ ] Verify `/health` endpoint from container
+- [ ] Verify container can connect to SQL Server
+- [ ] Document evidence
+- [ ] Commit containerization setup
 
 ### Phase 2 — Azure database
 - [ ] Create Azure SQL Database
@@ -426,3 +436,144 @@ Included:
 
 Impact:
 A stable deployment-preparation baseline now exists before containerization and cloud deployment begin.
+
+### Step 11 — Amend deployment preparation commit
+
+Commands:
+`git add .env.example docs/lu-24-deployment-log.md`
+`git commit --amend --no-edit`
+
+Result:
+The initial deployment preparation commit was amended to include final corrections to the environment template and deployment log documentation.
+
+Impact:
+The deployment-preparation baseline remains consolidated into one clean commit before containerization and cloud deployment work begins.
+
+### Step 12 — Create containerization configuration
+
+Files:
+- `Dockerfile`
+- `.dockerignore`
+
+Result:
+A Docker container configuration was added for the GYMX backend.
+
+Dockerfile responsibilities:
+- use Node.js runtime image
+- install dependencies
+- copy backend source files
+- expose backend port
+- start backend using `npm start`
+
+`.dockerignore` excludes:
+- `node_modules`
+- `.env`
+- `.git`
+- documentation files
+
+Impact:
+The backend can now be built and executed in a reproducible containerized environment, which forms the basis for later Azure deployment.
+
+### Step 13 — Build backend container image
+
+Command:
+`docker build -t gymx-backend .`
+
+Result:
+Docker successfully built the `gymx-backend` image using the provided Dockerfile.
+
+Verification:
+The Docker Desktop build overview reported:
+- build completed successfully
+- linux/amd64 platform
+- Node.js backend image packaged successfully
+
+Impact:
+The backend application can now be packaged into a reproducible container image for deployment and runtime validation.
+
+### Step 14 — Fix Prisma Client generation inside container
+
+Command:
+`docker run -p 3000:3000 --env-file .env gymx-backend`
+
+Initial result:
+The backend container started, but crashed because Prisma Client was not generated inside the Docker image.
+
+Error:
+`@prisma/client did not initialize yet. Please run "prisma generate"`
+
+Cause:
+The Docker image installed dependencies but did not run `npx prisma generate` during the image build.
+
+Resolution:
+The Dockerfile was updated to copy the Prisma schema and run `npx prisma generate` during image creation.
+
+Impact:
+This ensures Prisma Client is available inside the container at runtime.
+
+### Step 15 — Resolve container database connection configuration
+
+Initial result:
+The backend container started successfully and `/health` returned `200 OK`, but database-connected endpoints returned `500 Internal Server Error`.
+
+Cause:
+The Docker-specific environment configuration contained quotation marks around the environment variable values. During container runtime, these quotation marks became part of the actual variable value, causing the Prisma SQL Server connection string to be parsed incorrectly.
+
+Resolution:
+Quotation marks were removed from the `.env.docker` configuration values.
+
+Example:
+
+Incorrect:
+`DATABASE_URL="sqlserver://host.docker.internal:1433;..."`
+
+Correct:
+`DATABASE_URL=sqlserver://host.docker.internal:1433;...`
+
+Verification:
+- `/health` endpoint returned `200 OK`
+- registration endpoint succeeded
+- database-connected requests functioned correctly from inside the container
+
+Impact:
+The backend container can now successfully communicate with the SQL Server container through the Docker runtime configuration.
+
+### Step 16 — Verify containerized backend flow
+
+Verification:
+The following endpoints were tested against the backend running inside Docker:
+
+- `GET /health`
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/auth/me`
+- `POST /api/sessions`
+- `GET /api/sessions`
+- `GET /api/progress/current-week`
+- protected endpoint without token
+- invalid input scenario
+
+Result:
+The containerized backend successfully handled health checks, authentication, protected routes, database-connected endpoints and expected error responses.
+
+Impact:
+The backend container is functionally verified and ready for Azure deployment preparation.
+
+### Step 17 — Complete local containerization validation
+
+Verification performed:
+- Docker image built successfully
+- Backend container started successfully
+- SQL Server container remained operational
+- `/health` endpoint returned `200 OK`
+- Authentication endpoints functioned correctly
+- Database-connected endpoints functioned correctly
+- Backend container successfully communicated with SQL Server
+
+Additional findings:
+- Prisma Client generation needed to occur during Docker image build
+- Docker-specific environment configuration required `host.docker.internal`
+- Quotation marks inside `.env.docker` values caused connection parsing issues and were removed
+
+Impact:
+The GYMX backend is now validated in a reproducible containerized runtime environment and is ready for cloud deployment preparation.
