@@ -4,5 +4,11 @@ node_modules/
 .env
 .env.docker
 
+# Secrets
+deploy-secrets.ps1
+
 # Prisma generated client
 .prisma/
+
+# Docs and logs
+docs/lu-24-deployment-log.md
