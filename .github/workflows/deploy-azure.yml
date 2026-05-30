@@ -6,6 +6,9 @@ on:
       - master
       - feature/lu24-deployment
 
+env:
+  DATABASE_URL: ${{ vars.PRISMA_DATABASE_URL }}
+
 jobs:
   build-validation:
     runs-on: ubuntu-latest
