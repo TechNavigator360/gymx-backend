@@ -31,3 +31,11 @@ jobs:
 
       - name: Validate Docker build
         run: docker build -t gymx-backend:validation .
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Verify Azure authentication
+        run: az account show
