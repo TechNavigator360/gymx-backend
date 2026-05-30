@@ -29,8 +29,14 @@ jobs:
       - name: Validate Prisma schema
         run: npx prisma validate
 
-      - name: Validate Docker build
-        run: docker build -t gymx-backend:validation .
+      - name: Build production Docker image
+        run: docker build -t gymxregistry24015067.azurecr.io/gymx-backend:${{ github.sha }} .
+
+      - name: Login to Azure Container Registry
+        run: az acr login --name gymxregistry24015067
+
+      - name: Push Docker image to Azure Container Registry
+        run: docker push gymxregistry24015067.azurecr.io/gymx-backend:${{ github.sha }}
 
       - name: Azure login
         uses: azure/login@v2
