@@ -59,3 +59,9 @@ jobs:
               az webapp restart \
                 --name ${{ vars.AZURE_WEBAPP_NAME }} \
                 --resource-group ${{ vars.AZURE_RESOURCE_GROUP }}
+
+      - name: Wait for App Service restart
+        run: sleep 30
+
+      - name: Validate deployed API with Newman
+        run: npm run test:azure
