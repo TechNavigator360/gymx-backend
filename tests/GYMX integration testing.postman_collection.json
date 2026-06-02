@@ -45,7 +45,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"email\": \"integrationtest@gymx.nl\",\r\n    \"password\": \"Password123!\"\r\n}",
+          "raw": "{\r\n  \"email\": \"{{userAEmail}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -64,73 +64,7 @@
         },
         "description": "This returns a `token` that you can use to retrieve information later on.\n\nWe have included a test to confirm if a token is returned. We have also added test scripts to copy the token to the `token` collection variable. This makes it easy for us to reuse this token in other requests in the collection."
       },
-      "response": [
-        {
-          "name": "Passed",
-          "originalRequest": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"email\": \"integrationtest@gymx.nl\",\r\n    \"password\": \"Password123!\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/auth/register",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "register"
-              ]
-            }
-          },
-          "status": "Created",
-          "code": 201,
-          "_postman_previewlanguage": null,
-          "header": [
-            {
-              "key": "X-Powered-By",
-              "value": "Express"
-            },
-            {
-              "key": "Access-Control-Allow-Origin",
-              "value": "*"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json; charset=utf-8"
-            },
-            {
-              "key": "Content-Length",
-              "value": "95"
-            },
-            {
-              "key": "ETag",
-              "value": "W/\"5f-NCtxw9bOEJpKMusI6mpcwOy+PeQ\""
-            },
-            {
-              "key": "Date",
-              "value": "Thu, 14 May 2026 08:47:57 GMT"
-            },
-            {
-              "key": "Connection",
-              "value": "keep-alive"
-            },
-            {
-              "key": "Keep-Alive",
-              "value": "timeout=5"
-            }
-          ],
-          "cookie": [],
-          "body": "{\n    \"message\": \"User registered successfully\",\n    \"user\": {\n        \"id\": 1003,\n        \"email\": \"integrationtest@gymx.nl\"\n    }\n}"
-        }
-      ]
+      "response": []
     },
     {
       "name": "T02 - Aangemaakte gebruiker inloggen + token opslaan",
@@ -158,11 +92,21 @@
         }
       ],
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "POST",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"email\": \"integrationtest@gymx.nl\",\r\n  \"password\": \"Password123!\"\r\n}",
+          "raw": "{\r\n  \"email\": \"{{userAEmail}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -246,6 +190,71 @@
           ],
           "cookie": [],
           "body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwMDMsImlhdCI6MTc3ODc0ODY4NCwiZXhwIjoxNzc4NzUyMjg0fQ.6-meleSloYEyD7dBghcczct0J-kT8JYcZ0d3UjuhPRY\",\n    \"user\": {\n        \"id\": 1003,\n        \"email\": \"integrationtest@gymx.nl\"\n    }\n}"
+        },
+        {
+          "name": "Passed",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"integrationtest@gymx.nl\",\r\n    \"password\": \"Password123!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "95"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"5f-NCtxw9bOEJpKMusI6mpcwOy+PeQ\""
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 14 May 2026 08:47:57 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"User registered successfully\",\n    \"user\": {\n        \"id\": 1003,\n        \"email\": \"integrationtest@gymx.nl\"\n    }\n}"
         }
       ]
     },
@@ -273,11 +282,21 @@
         }
       ],
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "POST",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"email\": \"integrationtest@gymx.nl\",\r\n  \"password\": \"Password124!\"\r\n}",
+          "raw": "{\r\n  \"email\": \"{{userAEmail}}\",\r\n  \"password\": \"WrongPassword123!\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -391,6 +410,16 @@
         }
       ],
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "body": {
@@ -632,7 +661,7 @@
           "bearer": [
             {
               "key": "token",
-              "value": "invalid-token",
+              "value": "invalid",
               "type": "string"
             }
           ]
@@ -735,6 +764,16 @@
         }
       ],
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "POST",
         "header": [],
         "body": {
@@ -837,19 +876,34 @@
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test(\"Status code is 201\", function () {\r",
-              "    pm.response.to.have.status(201);\r",
-              "});\r",
-              "\r",
-              "pm.test(\"Trainingssessie wordt aangemaakt en opgeslagen\", function () {\r",
-              "    const response = pm.response.json();\r",
-              "\r",
-              "    pm.expect(response).to.have.property(\"id\");\r",
-              "    pm.expect(response).to.have.property(\"user_id\");\r",
-              "    pm.expect(response).to.have.property(\"date\");\r",
-              "\r",
-              "    pm.collectionVariables.set(\"sessionId\", response.id);\r",
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Trainingssessie wordt aangemaakt en opgeslagen\", function () {",
+              "    const response = pm.response.json();",
+              "",
+              "    pm.expect(response).to.have.property(\"id\");",
+              "    pm.expect(response).to.have.property(\"user_id\");",
+              "    pm.expect(response).to.have.property(\"date\");",
+              "",
+              "    pm.collectionVariables.set(\"sessionId\", response.id);",
+              "    pm.collectionVariables.set(\"userASessionId\", response.id);",
+              "",
+              "    console.log(\"User A session saved:\", response.id);",
               "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const today = new Date().toISOString().split(\"T\")[0];\r",
+              "pm.collectionVariables.set(\"sessionDate\", today);"
             ],
             "type": "text/javascript",
             "packages": {},
@@ -858,11 +912,21 @@
         }
       ],
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "POST",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"date\": \"2026-05-14\"\r\n}",
+          "raw": "{\r\n  \"date\": \"{{sessionDate}}\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -980,6 +1044,16 @@
         "disableBodyPruning": true
       },
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "body": {
@@ -1096,6 +1170,16 @@
         "disableBodyPruning": true
       },
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "body": {
@@ -1224,6 +1308,16 @@
         "disableBodyPruning": true
       },
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "body": {
@@ -1338,6 +1432,18 @@
             "packages": {},
             "requests": {}
           }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const today = new Date().toISOString().split(\"T\")[0];\r",
+              "pm.collectionVariables.set(\"sessionDate\", today);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
         }
       ],
       "request": {
@@ -1355,7 +1461,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"date\": \"2026-05-14\"\r\n}",
+          "raw": "{\r\n  \"date\": \"{{sessionDate}}\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -1395,6 +1501,16 @@
         }
       ],
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "DELETE",
         "header": [],
         "body": {
@@ -1501,6 +1617,16 @@
         "disableBodyPruning": true
       },
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "body": {
@@ -1593,6 +1719,130 @@
       ]
     },
     {
+      "name": "T10a - Een gebruiker aanmaken",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201 or 400 if User B already exists\", function () {",
+              "    pm.expect([201, 400]).to.include(pm.response.code);",
+              "});",
+              "",
+              "pm.test(\"Response is JSON\", function () {",
+              "    pm.response.to.be.json;",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"{{userBEmail}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        },
+        "description": "This returns a `token` that you can use to retrieve information later on.\n\nWe have included a test to confirm if a token is returned. We have also added test scripts to copy the token to the `token` collection variable. This makes it easy for us to reuse this token in other requests in the collection."
+      },
+      "response": [
+        {
+          "name": "Passed",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"integrationtest@gymx.nl\",\r\n    \"password\": \"Password123!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "X-Powered-By",
+              "value": "Express"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "95"
+            },
+            {
+              "key": "ETag",
+              "value": "W/\"5f-NCtxw9bOEJpKMusI6mpcwOy+PeQ\""
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 14 May 2026 08:47:57 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"User registered successfully\",\n    \"user\": {\n        \"id\": 1003,\n        \"email\": \"integrationtest@gymx.nl\"\n    }\n}"
+        }
+      ]
+    },
+    {
       "name": "T10b - User B inloggen + token opslaan",
       "event": [
         {
@@ -1634,7 +1884,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"email\": \"integrationtest2@gymx.nl\",\r\n  \"password\": \"Password123!\"\r\n}",
+          "raw": "{\r\n  \"email\": \"{{userBEmail}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -1697,7 +1947,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"email\": \"integrationtest2@gymx.nl\",\r\n  \"password\": \"Password123!\"\r\n}",
+          "raw": "",
           "options": {
             "raw": {
               "language": "json"
@@ -1705,13 +1955,13 @@
           }
         },
         "url": {
-          "raw": "{{baseUrl}}/sessions/{{SessionId}}",
+          "raw": "{{baseUrl}}/sessions/{{userASessionId}}",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
             "sessions",
-            "{{SessionId}}"
+            "{{userASessionId}}"
           ]
         },
         "description": "User A maakt sessie aan\nUser B logt in\nUser B probeert sessie van User A te verwijderen\nAPI geeft 403 Forbidden"
@@ -1791,23 +2041,23 @@
           "listen": "test",
           "script": {
             "exec": [
-              "const sessionId = pm.collectionVariables.get(\"sessionId\");\r",
-              "\r",
-              "console.log(\"User B probeert sessie van User A in te zien:\", sessionId);\r",
-              "\r",
-              "pm.test(\"sessionId is aanwezig\", function () {\r",
-              "    pm.expect(sessionId).to.not.be.undefined;\r",
-              "    pm.expect(sessionId).to.not.eql(\"\");\r",
-              "});\r",
-              "\r",
-              "pm.test(\"Status code is 403 wanneer User B sessie van User A probeert in te zien\", function () {\r",
-              "    pm.response.to.have.status(403);\r",
-              "});\r",
-              "\r",
-              "pm.test(\"Response bevat veilige foutmelding\", function () {\r",
-              "    const response = pm.response.json();\r",
-              "\r",
-              "    pm.expect(response).to.have.property(\"message\");\r",
+              "const userASessionId = pm.collectionVariables.get(\"userASessionId\");",
+              "",
+              "console.log(\"User B probeert sessie van User A in te zien:\", userASessionId);",
+              "",
+              "pm.test(\"userASessionId is aanwezig\", function () {",
+              "    pm.expect(userASessionId).to.not.be.undefined;",
+              "    pm.expect(userASessionId).to.not.eql(\"\");",
+              "});",
+              "",
+              "pm.test(\"Status code is 403 wanneer User B sessie van User A probeert in te zien\", function () {",
+              "    pm.response.to.have.status(403);",
+              "});",
+              "",
+              "pm.test(\"Response bevat veilige foutmelding\", function () {",
+              "    const response = pm.response.json();",
+              "",
+              "    pm.expect(response).to.have.property(\"message\");",
               "});"
             ],
             "type": "text/javascript",
@@ -1842,13 +2092,13 @@
           }
         },
         "url": {
-          "raw": "{{baseUrl}}/sessions/{{sessionId}}",
+          "raw": "{{baseUrl}}/sessions/{{userASessionId}}",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
             "sessions",
-            "{{sessionId}}"
+            "{{userASessionId}}"
           ]
         }
       },
@@ -1958,6 +2208,16 @@
         "disableBodyPruning": true
       },
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "body": {
@@ -2081,6 +2341,16 @@
         }
       ],
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "POST",
         "header": [],
         "body": {
@@ -2305,15 +2575,14 @@
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test(\"Status code is 200\", function () {\r",
-              "    pm.response.to.have.status(200);\r",
+              "pm.test(\"Status code is 400\", function () {\r",
+              "    pm.response.to.have.status(400);\r",
               "});\r",
               "\r",
-              "pm.test(\"Weekly goal is bijgewerkt\", function () {\r",
+              "pm.test(\"Response bevat validatiefout\", function () {\r",
               "    const response = pm.response.json();\r",
               "\r",
-              "    pm.expect(response).to.have.property(\"target_sessions\");\r",
-              "    pm.expect(response.target_sessions).to.eql(5);\r",
+              "    pm.expect(response).to.have.property(\"message\");\r",
               "});\r",
               "\r",
               "console.log(\"Weekly goal updated to 5 sessions.\");"
@@ -2325,11 +2594,21 @@
         }
       ],
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "PATCH",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"target_sessions\": 5\r\n}",
+          "raw": "{\r\n  \"target_sessions\": \"acht\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -2461,7 +2740,17 @@
             "weekly-goal"
           ]
         },
-        "description": "een weekdoel aanpassen"
+        "description": "een weekdoel aanpassen",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        }
       },
       "response": [
         {
@@ -2596,7 +2885,17 @@
             "current-week"
           ]
         },
-        "description": "belangrijk integratietest omdat hier meerdere onderdelen samenkomen:\n\n- JWT authenticatie\n    \n- current-week filtering\n    \n- weekly goal\n    \n- database queries\n    \n- service-layer berekeningen\n    \n- DTO response"
+        "description": "belangrijk integratietest omdat hier meerdere onderdelen samenkomen:\n\n- JWT authenticatie\n    \n- current-week filtering\n    \n- weekly goal\n    \n- database queries\n    \n- service-layer berekeningen\n    \n- DTO response",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        }
       },
       "response": [
         {
@@ -2667,16 +2966,6 @@
       ]
     }
   ],
-  "auth": {
-    "type": "bearer",
-    "bearer": [
-      {
-        "key": "token",
-        "value": "{{token}}",
-        "type": "string"
-      }
-    ]
-  },
   "event": [
     {
       "listen": "prerequest",
@@ -2684,7 +2973,13 @@
         "type": "text/javascript",
         "requests": {},
         "exec": [
-          ""
+          "const runId = Date.now();\r",
+          "\r",
+          "if (!pm.collectionVariables.get(\"userAEmail\")) {\r",
+          "  pm.collectionVariables.set(\"userAEmail\", `userA_${runId}@gymx.nl`);\r",
+          "  pm.collectionVariables.set(\"userBEmail\", `userB_${runId}@gymx.nl`);\r",
+          "  pm.collectionVariables.set(\"password\", \"Password123!\");\r",
+          "}"
         ]
       }
     },
@@ -2723,11 +3018,27 @@
       "value": ""
     },
     {
-      "key": "SessionId",
+      "key": "deleteSessionId",
       "value": ""
     },
     {
-      "key": "deleteSessionId",
+      "key": "userAEmail",
+      "value": ""
+    },
+    {
+      "key": "userBEmail",
+      "value": ""
+    },
+    {
+      "key": "password",
+      "value": ""
+    },
+    {
+      "key": "userASessionId",
+      "value": ""
+    },
+    {
+      "key": "sessionDate",
       "value": ""
     }
   ]

@@ -12,3 +12,4 @@ deploy-secrets.ps1
 
 # Docs and logs
 docs/lu-24-deployment-log.md
+docs/deployment.md
